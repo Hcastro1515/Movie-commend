@@ -4,8 +4,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class MovieItemBuilder extends StatefulWidget {
+  final String genre; 
   const MovieItemBuilder({
-    Key key,
+    Key key, this.genre,
   }) : super(key: key);
 
   @override
@@ -13,10 +14,9 @@ class MovieItemBuilder extends StatefulWidget {
 }
 
 class _MovieItemBuilderState extends State<MovieItemBuilder> {
-  String movieName = "The nun";
   Future<Movie> _fetchData() async {
-    final res =
-        await http.get('http://www.omdbapi.com/?t=$movieName&apikey=321c4585');
+    final res = await http.get(
+        'https://api.themoviedb.org/3/search/movie?query=${widget.genre}&api_key=6ec537b9135ea346c2384f9c88fd78a1');
     final jsonData = json.decode(res.body);
     var map = Map<String, dynamic>.from(jsonData);
     var response = Movie.fromJson(map);
@@ -34,12 +34,18 @@ class _MovieItemBuilderState extends State<MovieItemBuilder> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
-                itemCount: 3,
+                itemCount: snapshot.data.results.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: Text('${snapshot.data.title}'),
-                    trailing: Image.network("${snapshot.data.poster}"),
-                  );
+                  return Container(
+                    width: double.infinity, 
+                    height: 50.0,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("${snapshot.data.results[index].originalTitle}")
+                      ],
+                    ),
+                  ); 
                 });
           } else {
             return CircularProgressIndicator();

@@ -3,143 +3,103 @@
 //     final Movie = MovieFromJson(jsonString);
 
 import 'dart:convert';
-
 class Movie {
-    Movie({
-        this.title,
-        this.year,
-        this.rated,
-        this.released,
-        this.runtime,
-        this.genre,
-        this.director,
-        this.writer,
-        this.actors,
-        this.plot,
-        this.language,
-        this.country,
-        this.awards,
-        this.poster,
-        this.ratings,
-        this.metascore,
-        this.imdbRating,
-        this.imdbVotes,
-        this.imdbId,
-        this.type,
-        this.dvd,
-        this.boxOffice,
-        this.production,
-        this.website,
-        this.response,
-    });
+  int page;
+  int totalResults;
+  int totalPages;
+  List<Results> results;
 
-    String title;
-    String year;
-    String rated;
-    String released;
-    String runtime;
-    String genre;
-    String director;
-    String writer;
-    String actors;
-    String plot;
-    String language;
-    String country;
-    String awards;
-    String poster;
-    List<Rating> ratings;
-    String metascore;
-    String imdbRating;
-    String imdbVotes;
-    String imdbId;
-    String type;
-    String dvd;
-    String boxOffice;
-    String production;
-    String website;
-    String response;
+  Movie({this.page, this.totalResults, this.totalPages, this.results});
 
-    factory Movie.fromRawJson(String str) => Movie.fromJson(json.decode(str));
+  Movie.fromJson(Map<String, dynamic> json) {
+    page = json['page'];
+    totalResults = json['total_results'];
+    totalPages = json['total_pages'];
+    if (json['results'] != null) {
+      results = new List<Results>();
+      json['results'].forEach((v) {
+        results.add(new Results.fromJson(v));
+      });
+    }
+  }
 
-    String toRawJson() => json.encode(toJson());
-
-    factory Movie.fromJson(Map<String, dynamic> json) => Movie(
-        title: json["Title"],
-        year: json["Year"],
-        rated: json["Rated"],
-        released: json["Released"],
-        runtime: json["Runtime"],
-        genre: json["Genre"],
-        director: json["Director"],
-        writer: json["Writer"],
-        actors: json["Actors"],
-        plot: json["Plot"],
-        language: json["Language"],
-        country: json["Country"],
-        awards: json["Awards"],
-        poster: json["Poster"],
-        ratings: List<Rating>.from(json["Ratings"].map((x) => Rating.fromJson(x))),
-        metascore: json["Metascore"],
-        imdbRating: json["imdbRating"],
-        imdbVotes: json["imdbVotes"],
-        imdbId: json["imdbID"],
-        type: json["Type"],
-        dvd: json["DVD"],
-        boxOffice: json["BoxOffice"],
-        production: json["Production"],
-        website: json["Website"],
-        response: json["Response"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "Title": title,
-        "Year": year,
-        "Rated": rated,
-        "Released": released,
-        "Runtime": runtime,
-        "Genre": genre,
-        "Director": director,
-        "Writer": writer,
-        "Actors": actors,
-        "Plot": plot,
-        "Language": language,
-        "Country": country,
-        "Awards": awards,
-        "Poster": poster,
-        "Ratings": List<dynamic>.from(ratings.map((x) => x.toJson())),
-        "Metascore": metascore,
-        "imdbRating": imdbRating,
-        "imdbVotes": imdbVotes,
-        "imdbID": imdbId,
-        "Type": type,
-        "DVD": dvd,
-        "BoxOffice": boxOffice,
-        "Production": production,
-        "Website": website,
-        "Response": response,
-    };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['page'] = this.page;
+    data['total_results'] = this.totalResults;
+    data['total_pages'] = this.totalPages;
+    if (this.results != null) {
+      data['results'] = this.results.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
 }
 
-class Rating {
-    Rating({
-        this.source,
-        this.value,
-    });
+class Results {
+  double popularity;
+  int voteCount;
+  bool video;
+  String posterPath;
+  int id;
+  bool adult;
+  String backdropPath;
+  String originalLanguage;
+  String originalTitle;
+  List<int> genreIds;
+  String title;
+  double voteAverage;
+  String overview;
+  String releaseDate;
 
-    String source;
-    String value;
+  Results(
+      {this.popularity,
+      this.voteCount,
+      this.video,
+      this.posterPath,
+      this.id,
+      this.adult,
+      this.backdropPath,
+      this.originalLanguage,
+      this.originalTitle,
+      this.genreIds,
+      this.title,
+      this.voteAverage,
+      this.overview,
+      this.releaseDate});
 
-    factory Rating.fromRawJson(String str) => Rating.fromJson(json.decode(str));
+  Results.fromJson(Map<String, dynamic> json) {
+    popularity = json['popularity'];
+    voteCount = json['vote_count'];
+    video = json['video'];
+    posterPath = json['poster_path'];
+    id = json['id'];
+    adult = json['adult'];
+    backdropPath = json['backdrop_path'];
+    originalLanguage = json['original_language'];
+    originalTitle = json['original_title'];
+    genreIds = json['genre_ids'].cast<int>();
+    title = json['title'];
+    // voteAverage = json['vote_average'];
+    overview = json['overview'];
+    releaseDate = json['release_date'];
+  }
 
-    String toRawJson() => json.encode(toJson());
-
-    factory Rating.fromJson(Map<String, dynamic> json) => Rating(
-        source: json["Source"],
-        value: json["Value"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "Source": source,
-        "Value": value,
-    };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['popularity'] = this.popularity;
+    data['vote_count'] = this.voteCount;
+    data['video'] = this.video;
+    data['poster_path'] = this.posterPath;
+    data['id'] = this.id;
+    data['adult'] = this.adult;
+    data['backdrop_path'] = this.backdropPath;
+    data['original_language'] = this.originalLanguage;
+    data['original_title'] = this.originalTitle;
+    data['genre_ids'] = this.genreIds;
+    data['title'] = this.title;
+    data['vote_average'] = this.voteAverage;
+    data['overview'] = this.overview;
+    data['release_date'] = this.releaseDate;
+    return data;
+  }
 }
