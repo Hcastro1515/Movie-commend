@@ -11,7 +11,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   String movieName = "The nun";
-  // Movie movies = Movie();
   List<Movie> movies = List();
   var isLoading = false;
 
@@ -37,12 +36,10 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchData().then((value) => print(value.genre));
   }
 
   @override
   Widget build(BuildContext context) {
-    var movie = _fetchData().then((value) => value); 
     return Scaffold(
         appBar: AppBar(
           title: Text("Movie Searcher"),
@@ -54,23 +51,21 @@ class _MainScreenState extends State<MainScreen> {
             onPressed: _fetchData,
           ),
         ),
-        body: isLoading
-            ? Center(child: CircularProgressIndicator())
-            : ListView.builder(
-                itemCount: movies.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                    title: Text("${movies[index].title.toString()}"),
-                    trailing: Image.network(
-                      '${movies[index].poster.toString()}',
-                      fit: BoxFit.cover,
-                      height: 40.0,
-                      width: 40.0,
-                    ),
-                  );
-                },
-              ));
+        body: FutureBuilder<Movie>(
+            future: _fetchData(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ListView.builder(
+                    itemCount: 3,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: Text('${snapshot.data.title}'),
+                        trailing: Image.network("${snapshot.data.poster}"),
+                      );
+                    });
+              } else {
+                return CircularProgressIndicator();
+              }
+            }));
   }
 }
