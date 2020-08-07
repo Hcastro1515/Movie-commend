@@ -11,6 +11,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   String movieName = "The nun";
+  // Movie movies = Movie();
   List<Movie> movies = List();
   var isLoading = false;
 
@@ -21,7 +22,6 @@ class _MainScreenState extends State<MainScreen> {
     final res =
         await http.get('http://www.omdbapi.com/?t=$movieName&apikey=321c4585');
     final jsonData = json.decode(res.body);
-    print(res.body);
     var map = Map<String, dynamic>.from(jsonData);
     var response = Movie.fromJson(map);
     if (res.statusCode == 200) {
@@ -35,7 +35,14 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _fetchData().then((value) => print(value.genre));
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var movie = _fetchData().then((value) => value); 
     return Scaffold(
         appBar: AppBar(
           title: Text("Movie Searcher"),
