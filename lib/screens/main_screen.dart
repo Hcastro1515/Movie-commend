@@ -1,8 +1,7 @@
-import '../models/movie.dart';
+// import 'package:Movie_rating_app/components/movie_item_builder.dart';
+import 'package:Movie_rating_app/components/search-container.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_svg/flutter_svg.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -10,29 +9,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  String movieName = "The nun";
-  List<Movie> movies = List();
-  var isLoading = false;
-
-  Future<Movie> _fetchData() async {
-    setState(() {
-      isLoading = true;
-    });
-    final res =
-        await http.get('http://www.omdbapi.com/?t=$movieName&apikey=321c4585');
-    final jsonData = json.decode(res.body);
-    var map = Map<String, dynamic>.from(jsonData);
-    var response = Movie.fromJson(map);
-    if (res.statusCode == 200) {
-      setState(() {
-        isLoading = false;
-      });
-      return response;
-    } else {
-      throw Exception("Failed to load data");
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -40,32 +16,38 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Movie Searcher"),
-        ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: RaisedButton(
-            child: Text("Get data"),
-            onPressed: _fetchData,
+        backgroundColor: Color(0xff414141),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: Column(
+              children: <Widget>[
+                _customAppBar(),
+                SearchContainer(size: size)
+              ],
+            ),
           ),
-        ),
-        body: FutureBuilder<Movie>(
-            future: _fetchData(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ListView.builder(
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        leading: Text('${snapshot.data.title}'),
-                        trailing: Image.network("${snapshot.data.poster}"),
-                      );
-                    });
-              } else {
-                return CircularProgressIndicator();
-              }
-            }));
+        ));
+  }
+
+  Widget _customAppBar() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 25),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          SvgPicture.asset("assets/icons/menu-bar.svg"),
+          Text(
+            "Movies-commend",
+            style: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+          )
+        ],
+      ),
+    );
   }
 }
+
+
