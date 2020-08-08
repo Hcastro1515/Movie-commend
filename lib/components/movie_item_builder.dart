@@ -17,7 +17,7 @@ class MovieItemBuilder extends StatefulWidget {
 class _MovieItemBuilderState extends State<MovieItemBuilder> {
   Future<Movie> _fetchData() async {
     final res = await http.get(
-        'https://api.themoviedb.org/3/search/movie?query=${widget.genre}&api_key=6ec537b9135ea346c2384f9c88fd78a1');
+        'https://api.themoviedb.org/3/search/movie?query=${widget.genre}/&api_key=6ec537b9135ea346c2384f9c88fd78a1&language=en-US');
     final jsonData = json.decode(res.body);
     var map = Map<String, dynamic>.from(jsonData);
     var response = Movie.fromJson(map);
@@ -41,7 +41,7 @@ class _MovieItemBuilderState extends State<MovieItemBuilder> {
                 itemBuilder: (context, index) {
                   return Container(
                     margin: EdgeInsets.symmetric(horizontal: 5),
-                    width: size.width / 2.5,
+                    width: size.width / 2.7,
                     height: size.height,
                     decoration: BoxDecoration(
                       color: Colors.black.withOpacity(.42),
@@ -62,9 +62,9 @@ class _MovieItemBuilderState extends State<MovieItemBuilder> {
                               : ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: Image.network(
-                                    "https://image.tmdb.org/t/p/w500/${snapshot.data.results[index].posterPath}",
+                                    "https://image.tmdb.org/t/p/w185/${snapshot.data.results[index].posterPath}",
                                     width: double.infinity,
-                                    fit: BoxFit.fitWidth,
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                         ),

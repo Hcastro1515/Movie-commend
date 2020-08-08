@@ -15,7 +15,7 @@ class BuildGenreContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: size.height / 4,
+      height: size.height / 3,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(25.0, 10, 0, 10),
         child: Column(
