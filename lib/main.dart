@@ -9,7 +9,17 @@ class MyApp extends StatelessWidget {
  @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: MainScreen(), 
+      theme: ThemeData(
+        textTheme: TextTheme(
+          headline1: TextStyle(
+            fontSize: 20, 
+            color: Colors.white, 
+            // fontWeight: FontWeight.bold
+          )
+        )
+      ),
     ); 
   }
 }

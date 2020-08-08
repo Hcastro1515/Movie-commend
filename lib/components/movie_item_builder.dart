@@ -4,9 +4,10 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class MovieItemBuilder extends StatefulWidget {
-  final String genre; 
+  final String genre;
   const MovieItemBuilder({
-    Key key, this.genre,
+    Key key,
+    this.genre,
   }) : super(key: key);
 
   @override
@@ -29,23 +30,56 @@ class _MovieItemBuilderState extends State<MovieItemBuilder> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return FutureBuilder<Movie>(
         future: _fetchData(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
+                scrollDirection: Axis.horizontal,
                 itemCount: snapshot.data.results.length,
                 itemBuilder: (context, index) {
                   return Container(
-                    width: double.infinity, 
-                    height: 50.0,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("${snapshot.data.results[index].originalTitle}")
+                    margin: EdgeInsets.symmetric(horizontal: 5),
+                    width: size.width / 2.5,
+                    height: size.height,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(.42),
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                            blurRadius: 5,
+                            offset: Offset(0, -2),
+                            color: Colors.black.withOpacity(.3))
                       ],
                     ),
-                  ); 
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(
+                          child: snapshot.data.results[index].posterPath == null
+                              ? Image.asset("assets/images/placehoder.png")
+                              : ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                    "https://image.tmdb.org/t/p/w500/${snapshot.data.results[index].posterPath}",
+                                    width: double.infinity,
+                                    fit: BoxFit.fitWidth,
+                                  ),
+                                ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 5),
+                          child: Text(
+                            "${snapshot.data.results[index].originalTitle.toUpperCase()}",
+                            style: TextStyle(
+                                fontSize: 12, color: Color(0xffC4C4C4)),
+                          ),
+                        )
+                      ],
+                    ),
+                  );
                 });
           } else {
             return CircularProgressIndicator();

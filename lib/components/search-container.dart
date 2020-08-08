@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SearchContainer extends StatelessWidget {
   const SearchContainer({
@@ -12,6 +12,7 @@ class SearchContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(top: 10),
       width: double.infinity,
       height: size.height / 15,
       decoration: BoxDecoration(
@@ -27,7 +28,7 @@ class SearchContainer extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
         child: Row(children: [
-          // SvgPicture.asset("assets/icons/search-icon.svg"),
+          SvgPicture.asset("assets/icons/search-icon.svg"),
           SizedBox(
             width: 10,
           ),
@@ -43,11 +44,3 @@ class SearchContainer extends StatelessWidget {
     );
   }
 }
-
-// Text(
-//   "Search Movie title/genre",
-//   style: TextStyle(
-//       color: Colors.black.withOpacity(.5),
-//       fontSize: 20,
-//       fontWeight: FontWeight.bold),
-// ),
